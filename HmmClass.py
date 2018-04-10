@@ -2,27 +2,42 @@
 """
 Created on Fri May 26 18:02:31 2017
 
-@author: AMD
+@author: Felipe Aparecido Garcia
+@github: https://github.com/felipeagarcia/
 """
 import numpy
 import pickle
 import random
 import copy
 
-
+#To understand everything in this code, it's recomended to read 
+'''
+Rabiner, Lawrence R. "A tutorial on hidden Markov models and selected applications in speech recognition."
+Proceedings of the IEEE 77.2 (1989): 257-286.
+    
+'''
 class HmmScaled():
     "An implementation of hidden markov models based on Rabiner's book"
     def __init__(self, model_name, n, m):
-        A = numpy.zeros((n,n))
-        B = numpy.zeros((n,m))
-        pi = []
-        self.A = self.initializeMatrix(A,n,n)
+        'Initialize the model'
+        A = {} #A is the trasition matrix
+        B = {} #B is the emission matrix
+        pi = [] #pi is the initial states distribution
+
+        #To initialize a model, we use random values to
+        #fill the matrix
+        self.A = self.initializeMatrix(A,n,n) 
         self.B = self.initializeMatrix(B,n,m)
         self.pi = self.initializePi(pi,n)
 
+        #to create a model, we need to know some parameters:
+        #n is the number os states
+        #m is the number of possible observations
         self.name = model_name
         self.n = n
         self.m = m
+
+        #The parameters above are part of the canonical problems
         self.alfa = {}
         self.beta = {}
         self.eta = {}
@@ -30,16 +45,9 @@ class HmmScaled():
         self.c = {}
         print("Initalizing model")
 
-#    def __init__(self,model_name, A, B, pi, n, m):
-#        self.A = A
-#        self.B = B
-#        self.pi = pi
-#        self.name = model_name
-#        self.n = n
-#        self.m = m
         
     def __del__(self):
-        print("destroying",getattr(self,'name'))
+        print("destroying",getattr(self,'name')) #for debbug
         
     def initializeMatrix(self,Matrix, n, m):
         Matrix = numpy.zeros((n,m))
@@ -318,7 +326,7 @@ class HmmScaled():
         old_prob = 10000000000
         totalProb = 100000
         count = 0
-        max_count = 10
+        max_count = 10 #number of iterations
         tempA = {}
         tempB = {}
         tempPi = {}
@@ -358,4 +366,3 @@ class HmmScaled():
         #serializing the model to a file
         with open(self.name, 'wb') as fp:
             pickle.dump(self, fp)
-        return self.A, self.B, self.pi
