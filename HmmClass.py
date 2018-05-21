@@ -44,10 +44,6 @@ class HmmScaled():
         self.gama = {}
         self.c = {}
         print("Initalizing model")
-
-        
-    def __del__(self):
-        print("destroying",getattr(self,'name')) #for debbug
         
     def initializeMatrix(self,Matrix, n, m):
         Matrix = numpy.zeros((n,m))
@@ -226,7 +222,7 @@ class HmmScaled():
         'compute the log_10 of P(O|model)'
         p, c = self.foward_scaled(O,t)
         logProb = abs(sum([numpy.log10(c_aux) for c_aux in c]))
-        return -1*logProb
+        return logProb
     
     def compute_eta_gama(self, O, t):
         'computing eta and gama wich we will use to reestimate parameters'
